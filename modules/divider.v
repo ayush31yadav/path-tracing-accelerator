@@ -1,8 +1,20 @@
 `timescale 1ns/1ps
 
-// this module performs multi-cycle division, it takes 32 cycles for 32 bit division
-// result = a / b -- calculation starts when isValid is 1 and the previous calculation has been completed
-// isValid can be set to 0 if no new valid calculation is available
+// this module performs multi-cycle division, it takes 32 cycles for 16.16 bit division
+// performs A / B, after asserting the values rst should be asserted for atleast 1 cycles
+// A is latched inside a internal register so after reset it can be changed safely however B
+// must be kept asserted for th entire duration
+// when the result is calculated "resReady" is asserted for 1 cycle, data must be picked up at that very cycle
+// to avoid wrong values
+// works with POSITIVE VALUES only
+// -----------------------------------------------
+// RESOURCE CONSUMPTION
+//  DSP = 0
+//  LUT = 70
+//   FF = 69
+// BRAM = 0
+// URAM = 0
+// -----------------------------------------------
 module divider(
     input  wire [31:0] a, b,
     input  wire        clk, rst,
